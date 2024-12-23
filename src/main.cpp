@@ -4,6 +4,7 @@
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -85,23 +86,35 @@ int main(int, char**)
             continue;
         }
 
-        bool show_another_window = true;
-
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         
+        // ImGui::ShowDemoWindow();
 
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
+        // Main Code
+        ImGui::SetNextWindowSize(ImVec2 (500, 150));
+        ImGui::Begin("Fastboot Helper");
+        ImGui::Text("fastboot"); ImGui::SameLine();
+        const char* items[] = { "flashall", "flash", "boot", "reboot" };
+        static int item_current = 0;
+        ImGui::SetNextItemWidth(100);
+        ImGui::Combo(" ",&item_current, items, IM_ARRAYSIZE(items));
+
+        if (item_current == 1) {
+            ImGui::SameLine();
+            const char* items2[] = { "recovery", "boot", "system", "vendor" };
+            static int item_current2 = 0;
+            ImGui::SetNextItemWidth(100);
+            ImGui::Combo("## ",&item_current2, items2, IM_ARRAYSIZE(items2));
         }
+        if (ImGui::Button("current")) {
+            std::cout << item_current;
+        }
+        
+
+        ImGui::End();
 
         // Rendering
         ImGui::Render();
